@@ -7,6 +7,13 @@
 
         <service android:name=".SimpleService"></service>
 
+        <receiver android:name=".events.screen.ScreenOnBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.SCREEN_OFF"/>
+                <action android:name="android.intent.action.SCREEN_ON"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

@@ -10,7 +10,8 @@ public class CounterExecutor extends SimpleObject {
 
     private int limit;
 
-    public CounterExecutor(int limit) {
+    public CounterExecutor(String name, int limit) {
+        super(name);
         this.limit = limit;
     }
 
