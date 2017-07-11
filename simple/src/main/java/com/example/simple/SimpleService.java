@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.example.simple.database.DatabaseHelperSimpleObject;
 import com.example.simple.database.DatabaseSimpleObject;
@@ -51,24 +50,12 @@ public class SimpleService extends Service {
     }
 
     private void runSimpleObject(SimpleObject simpleObject) {
-        List<SimpleObject.EventType> events = simpleObject.getEvents();
+        List<SimpleObject.SimpleEventType> events = simpleObject.getEvents();
 
         boolean areAllEventsVerified = true;
         if (events != null) {
-            for (SimpleObject.EventType event : events) {
-                boolean isEventVerified = false;
-                switch (event) {
-                    case SCREEN_ON:
-                        isEventVerified = new ScreenOn(this).isEventVerified();
-                        break;
-                    case SCREEN_OFF:
-                        isEventVerified = new ScreenOff(this).isEventVerified();
-                        break;
-                    default:
-                        isEventVerified = false;
-                        break;
-                }
-
+            for (SimpleObject.SimpleEventType event : events) {
+                boolean isEventVerified = checkEvent(event);
                 if (!isEventVerified) {
                     areAllEventsVerified = false;
                     event.getValue().register(this);
@@ -82,6 +69,19 @@ public class SimpleService extends Service {
             }
             simpleObject.run();
         }
+    }
+
+    private boolean checkEvent(SimpleObject.SimpleEventType event) {
+        boolean isEventVerified = false;
+
+        if (event == SimpleObject.SCREEN_ON) {
+            isEventVerified = new ScreenOn(this).isEventVerified();
+        } else if (event == SimpleObject.SCREEN_OFF) {
+            isEventVerified = new ScreenOff(this).isEventVerified();
+        } else {
+            isEventVerified = false;
+        }
+        return isEventVerified;
     }
 
     private void runPeriodicSimpleObjectIfNameMatches(SimpleObject simpleObject, Intent intent) {

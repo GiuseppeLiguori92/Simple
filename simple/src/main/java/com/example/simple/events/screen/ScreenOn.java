@@ -3,13 +3,13 @@ package com.example.simple.events.screen;
 import android.content.Context;
 import android.os.Build;
 
-import com.example.simple.events.Event;
+import com.example.simple.events.SimpleEvent;
 
 /**
  * Created by giuseppeliguori on 06/07/2017.
  */
 
-public class ScreenOn extends ScreenEvent implements Event {
+public class ScreenOn extends ScreenEvent implements SimpleEvent {
 
     public ScreenOn(Context context) {
         super(context);

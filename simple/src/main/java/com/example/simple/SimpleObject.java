@@ -1,5 +1,9 @@
 package com.example.simple;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+
 import com.example.simple.events.screen.ScreenOffBroadcastReceiver;
 import com.example.simple.events.screen.ScreenOnBroadcastReceiver;
 import com.example.simple.events.SimpleBroadcastReceiver;
@@ -15,15 +19,60 @@ import java.util.List;
 public abstract class SimpleObject implements Serializable {
     private String name;
     private long period;
-    private List<EventType> events;
-    public enum EventType {
-        SCREEN_ON(new ScreenOnBroadcastReceiver()),
-        SCREEN_OFF(new ScreenOffBroadcastReceiver());
+    private List<SimpleEventType> events;
 
+    public static class SimpleEventType implements Serializable {
+
+        private Context context;
         private final SimpleBroadcastReceiver simpleBroadcastReceiver;
-        EventType(SimpleBroadcastReceiver simpleBroadcastReceiver) { this.simpleBroadcastReceiver = simpleBroadcastReceiver; }
-        public SimpleBroadcastReceiver getValue() { return simpleBroadcastReceiver; }
+
+        public SimpleEventType(Context context, SimpleBroadcastReceiver simpleBroadcastReceiver) {
+            this.context = context;
+            this.simpleBroadcastReceiver = simpleBroadcastReceiver;
+        }
+
+        protected SimpleEventType(SimpleBroadcastReceiver simpleBroadcastReceiver) {
+            this.simpleBroadcastReceiver = simpleBroadcastReceiver;
+        }
+
+        public SimpleBroadcastReceiver getValue() {
+            return simpleBroadcastReceiver;
+        }
+
+        public Context getContext() {
+            return context;
+        }
     }
+
+    public static class SimpleIntentFilter extends IntentFilter implements Serializable {
+        public SimpleIntentFilter() {
+            super();
+        }
+
+        public SimpleIntentFilter(String action) {
+            super(action);
+        }
+
+        public SimpleIntentFilter(String action, String dataType) throws MalformedMimeTypeException {
+            super(action, dataType);
+        }
+
+        public SimpleIntentFilter(IntentFilter o) {
+            super(o);
+        }
+    }
+
+    public static final SimpleEventType SCREEN_ON = new SimpleEventType(new ScreenOnBroadcastReceiver(new SimpleIntentFilter(Intent.ACTION_SCREEN_ON)));
+    public static final SimpleEventType SCREEN_OFF = new SimpleEventType(new ScreenOffBroadcastReceiver(new SimpleIntentFilter(Intent.ACTION_SCREEN_OFF)));
+//
+//    public enum SimpleEventType {
+//        SCREEN_ON(new ScreenOnBroadcastReceiver()),
+//        SCREEN_OFF(new ScreenOffBroadcastReceiver());
+//
+//        private final SimpleBroadcastReceiver simpleBroadcastReceiver;
+//        SimpleEventType(SimpleBroadcastReceiver simpleBroadcastReceiver) { this.simpleBroadcastReceiver = simpleBroadcastReceiver; }
+//        public SimpleBroadcastReceiver getValue() { return simpleBroadcastReceiver; }
+//    }
 
     public void setPeriod(int period) {
         this.period = period;
@@ -33,7 +82,7 @@ public abstract class SimpleObject implements Serializable {
         return period;
     }
 
-    public void setEvent(EventType event) {
+    public void setEvent(SimpleEventType event) {
         if (event == null) { return; }
 
         if (events == null) {
@@ -47,7 +96,7 @@ public abstract class SimpleObject implements Serializable {
         }
     }
 
-    public List<EventType> getEvents() {
+    public List<SimpleEventType> getEvents() {
         return events;
     }
 

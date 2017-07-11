@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
+import com.example.simple.SimpleObject;
 import com.example.simple.events.SimpleBroadcastReceiver;
 
 /**
@@ -12,11 +13,7 @@ import com.example.simple.events.SimpleBroadcastReceiver;
  */
 
 public class ScreenOnBroadcastReceiver extends SimpleBroadcastReceiver {
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
-            System.out.println("ScreenOnBroadcastReceiver.onReceive: Screen went ON");
-            super.onReceive(context, intent);
-        }
+    public ScreenOnBroadcastReceiver(SimpleObject.SimpleIntentFilter intentFilter) {
+        super(intentFilter);
     }
 }
